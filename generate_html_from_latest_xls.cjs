@@ -3,7 +3,7 @@ const path = require('path');
 const xlsx = require('xlsx');
 
 const DOWNLOADS_DIR = './downloads';
-const OUTPUT_FILE = './uptime_report_viabtc.html';
+const OUTPUT_FILE = './index.html';
 
 // Найти последний файл .xlsx
 function getLatestXLSXFile(dir) {
@@ -154,3 +154,15 @@ const summaryRow = `<tr>
 const html = generateHTML(tableRows, summaryRow);
 fs.writeFileSync(OUTPUT_FILE, html, 'utf8');
 console.log(`✅ Готово. HTML сохранён в ${OUTPUT_FILE}`);
+// === GitHub auto-push ===
+const { execSync } = require('child_process');
+
+try {
+  execSync('git add index.html', { stdio: 'inherit' });
+  execSync('git commit -m "Автообновление отчёта"', { stdio: 'inherit' });
+  execSync('git push', { stdio: 'inherit' });
+  console.log('✅ GitHub Pages обновлён автоматически');
+} catch (error) {
+  console.warn('⚠️ Git push не выполнен. Возможно, изменений не было или репозиторий не инициализирован.');
+}
+
